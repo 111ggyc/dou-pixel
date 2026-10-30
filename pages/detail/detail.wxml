@@ -1,0 +1,194 @@
+<view class="page" wx:if="{{chart}}">
+
+  <view class="nav" style="padding-top:{{statusBarHeight}}px">
+    <view class="nav-row">
+      <view class="back" bindtap="goBack">‹</view>
+      <view class="nav-title">{{title}}</view>
+      <view class="nav-meta">{{chart.cols}} × {{chart.rows}} 格</view>
+    </view>
+    <view class="rule"></view>
+  </view>
+
+  <!-- 图纸预览 -->
+  <view class="board">
+    <canvas type="2d" id="cv" class="cv"
+            style="width:{{cvW}}px;height:{{cvH}}px"></canvas>
+  </view>
+
+  <!-- 用途 -->
+  <view class="sec">
+    <view class="sec-bar"></view>
+    <text class="sec-title">用什么做</text>
+  </view>
+
+  <view class="seg">
+    <view class="seg-i {{kind === item.key ? 'on' : ''}}"
+          wx:for="{{kinds}}" wx:key="key"
+          data-k="{{item.key}}" bindtap="setKind">{{item.name}}</view>
+  </view>
+
+  <!-- 规格 -->
+  <block wx:if="{{kind === 'bead'}}">
+    <view class="opt-label">豆的规格</view>
+    <view class="seg small">
+      <view class="seg-i {{beadKey === item.key ? 'on' : ''}}"
+            wx:for="{{beads}}" wx:key="key"
+            data-k="{{item.key}}" bindtap="setBead">{{item.name}}</view>
+    </view>
+  </block>
+
+  <block wx:if="{{kind === 'stitch'}}">
+    <view class="opt-label">绣布规格</view>
+    <view class="seg small">
+      <view class="seg-i {{clothKey === item.key ? 'on' : ''}}"
+            wx:for="{{cloths}}" wx:key="key"
+            data-k="{{item.key}}" bindtap="setCloth">{{item.name}}</view>
+    </view>
+  </block>
+
+  <!-- 材料方案 -->
+  <view class="sec">
+    <view class="sec-bar"></view>
+    <text class="sec-title">材料方案</text>
+  </view>
+
+  <!-- 拼豆 -->
+  <block wx:if="{{plan.kind === 'bead'}}">
+    <view class="card">
+      <view class="row"><text class="k">规格</text><text class="v">{{plan.beadName}}</text></view>
+      <view class="row"><text class="k">成品尺寸</text><text class="v hl">{{plan.widthCm}} × {{plan.heightCm}} cm</text></view>
+      <view class="row"><text class="k">总颗数</text><text class="v hl">{{plan.total}} 颗</text></view>
+      <view class="row">
+        <text class="k">拼豆板</text>
+        <text class="v">{{plan.boardsX}} × {{plan.boardsY}} = {{plan.boards}} 块（{{plan.boardSize}}×{{plan.boardSize}} 格）</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 十字绣 -->
+  <block wx:if="{{plan.kind === 'stitch'}}">
+    <view class="card">
+      <view class="row"><text class="k">绣布</text><text class="v">{{plan.clothName}} / {{plan.strands}} 股</text></view>
+      <view class="row"><text class="k">成品尺寸</text><text class="v hl">{{plan.widthCm}} × {{plan.heightCm}} cm</text></view>
+      <view class="row">
+        <text class="k">裁剪尺寸</text>
+        <text class="v">{{plan.cutWidthCm}} × {{plan.cutHeightCm}} cm</text>
+      </view>
+      <view class="row"><text class="k">总针数</text><text class="v hl">{{plan.total}} 针</text></view>
+      <view class="row"><text class="k">用线</text><text class="v">{{plan.skeinTotal}} 束（建议买 {{plan.recommendSkeins}} 束）</text></view>
+    </view>
+    <view class="warn">
+      线量是**行业经验估算**，不是精确值。每束线约 {{plan.skeinMeters}} 米，
+      {{plan.clothName}} {{plan.strands}} 股约可绣 {{plan.stitchesPerSkein}} 格。
+      针法松紧、背面走线都会影响用量，**建议按上表的「建议买」多备一些** ——
+      中途发现某色不够，再去找同色号很麻烦。
+    </view>
+  </block>
+
+  <!-- 像素画 -->
+  <block wx:if="{{plan.kind === 'pixel'}}">
+    <view class="card">
+      <view class="row"><text class="k">总格数</text><text class="v hl">{{plan.total}} 格</text></view>
+      <view class="row"><text class="k">用色</text><text class="v">{{chart.palette.length}} 色</text></view>
+    </view>
+    <view class="card">
+      <view class="sub-t">放大倍率</view>
+      <view class="row" wx:for="{{plan.scales}}" wx:key="scale">
+        <text class="k">{{item.scale}}×</text>
+        <text class="v">{{item.w}} × {{item.h}} 像素</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 逐色用量 -->
+  <view class="sec">
+    <view class="sec-bar"></view>
+    <text class="sec-title">逐色用量</text>
+    <text class="sec-more">{{plan.perColor.length}} 色</text>
+  </view>
+
+  <view class="card">
+    <view class="cr" wx:for="{{plan.perColor}}" wx:key="hex">
+      <view class="sw" style="background:{{item.hex}}"></view>
+      <text class="sym">{{item.symbol}}</text>
+      <text class="hex">{{item.hex}}</text>
+      <text class="cnt">
+        {{item.count}} {{plan.kind === 'stitch' ? '格' : '颗'}}
+      </text>
+      <text class="extra" wx:if="{{plan.kind === 'stitch'}}">{{item.skeins}} 束</text>
+    </view>
+  </view>
+
+  <!-- 点赞 -->
+  <view class="like-bar {{liked ? 'on' : ''}}" bindtap="toggleLike">
+    <text class="lb-heart">{{liked ? '♥' : '♡'}}</text>
+    <text class="lb-n">{{likeTotal}}</text>
+    <text class="lb-t">人觉得这张图纸不错</text>
+  </view>
+
+  <!-- 操作 -->
+  <view class="acts">
+    <view class="act {{fav ? 'on' : ''}}" bindtap="toggleFav">{{fav ? '已收藏' : '收藏'}}</view>
+    <button class="act share" open-type="share">分享</button>
+    <view class="act" bindtap="openRate">{{rating ? '改评价' : '评价'}}</view>
+  </view>
+
+  <view class="my-rating" wx:if="{{rating}}">
+    我的评价：{{rating.stars}} 星<text wx:if="{{rating.note}}"> · {{rating.note}}</text>
+    <text class="del" catchtap="clearRate">删除</text>
+  </view>
+
+  <!-- 评论 -->
+  <view class="sec">
+    <view class="sec-bar"></view>
+    <text class="sec-title">评论</text>
+    <text class="sec-more">{{commentCount}} 条</text>
+  </view>
+
+  <view class="cmt-input">
+    <input class="ci" placeholder="说点什么…（100 字以内）" placeholder-class="ph"
+           maxlength="100" value="{{newComment}}" bindinput="onComment" />
+    <view class="ci-btn" bindtap="submitComment">发布</view>
+  </view>
+
+  <view class="cmt-empty" wx:if="{{commentCount === 0}}">还没有评论，来说两句</view>
+
+  <view class="cmt" wx:for="{{comments}}" wx:key="index">
+    <view class="cmt-head">
+      <text class="cmt-who {{item.mine ? 'me' : ''}}">{{item.mine ? '我' : '匿名同学'}}</text>
+      <text class="cmt-at">{{item.at}}</text>
+      <text class="cmt-del" wx:if="{{item.mine}}" data-idx="{{item.idx}}" catchtap="removeComment">删除</text>
+    </view>
+    <view class="cmt-text">{{item.text}}</view>
+  </view>
+
+  <view class="disclaimer">
+    ⚠️ 点赞、评论、评价**都只存在本机** —— 没有后端，别人看不到。
+    带日期的评论是预置的演示数据。
+    十字绣线量为经验估算，请按建议量多备。
+  </view>
+
+  <!-- 评价浮层 -->
+  <view class="mask" wx:if="{{showRate}}" bindtap="closeRate"></view>
+  <view class="sheet" wx:if="{{showRate}}">
+    <view class="sheet-t">评价这张图纸</view>
+
+    <view class="stars">
+      <text class="star {{s <= rateStars ? 'on' : ''}}"
+            wx:for="{{[1,2,3,4,5]}}" wx:for-item="s" wx:key="*this"
+            data-v="{{s}}" bindtap="setStars">★</text>
+      <text class="star-t">{{rateStars}} 分</text>
+    </view>
+
+    <textarea class="ta" placeholder="说说好不好做、颜色好不好配（可不填）"
+              placeholder-class="ph" maxlength="80"
+              value="{{rateNote}}" bindinput="onNote" />
+
+    <view class="sheet-bar">
+      <view class="sb ghost" bindtap="closeRate">取消</view>
+      <view class="sb main" bindtap="submitRate">保存</view>
+    </view>
+    <view class="sheet-note">只存在本机，不会上传。</view>
+  </view>
+
+</view>

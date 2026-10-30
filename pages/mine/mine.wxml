@@ -1,0 +1,79 @@
+<view class="page">
+
+  <view class="nav" style="padding-top:{{statusBarHeight}}px">
+    <view class="nav-row">
+      <view class="brand">我的</view>
+      <view class="brand-en">MINE</view>
+    </view>
+    <view class="rule"></view>
+  </view>
+
+  <!-- 统计 -->
+  <view class="stats">
+    <view class="stat">
+      <text class="stat-n">{{favs.length}}</text>
+      <text class="stat-l">收藏</text>
+    </view>
+    <view class="stat-div"></view>
+    <view class="stat">
+      <text class="stat-n">{{rated.length}}</text>
+      <text class="stat-l">评价</text>
+    </view>
+    <view class="stat-div"></view>
+    <view class="stat">
+      <text class="stat-n">{{avg || '—'}}</text>
+      <text class="stat-l">平均分</text>
+    </view>
+  </view>
+
+  <!-- 切换 -->
+  <view class="seg">
+    <view class="seg-i {{tab === 'fav' ? 'on' : ''}}" data-k="fav" bindtap="setTab">收藏</view>
+    <view class="seg-i {{tab === 'rate' ? 'on' : ''}}" data-k="rate" bindtap="setTab">评价</view>
+  </view>
+
+  <!-- 收藏 -->
+  <block wx:if="{{tab === 'fav'}}">
+    <view class="empty" wx:if="{{favs.length === 0}}">
+      <view class="empty-t">还没有收藏</view>
+      <view class="empty-s">去图纸库看看，喜欢的可以收藏</view>
+      <view class="empty-btn" bindtap="toGallery">逛图纸库</view>
+    </view>
+
+    <view class="item" wx:for="{{favs}}" wx:key="key"
+          data-preset="{{item.presetId}}" bindtap="toDetail">
+      <view class="i-body">
+        <view class="i-name">{{item.name}}</view>
+        <view class="i-meta">{{item.cols}} × {{item.rows}} 格 · {{item.colors}} 色</view>
+      </view>
+      <text class="i-at">{{item.at}}</text>
+    </view>
+  </block>
+
+  <!-- 评价 -->
+  <block wx:if="{{tab === 'rate'}}">
+    <view class="empty" wx:if="{{rated.length === 0}}">
+      <view class="empty-t">还没有评价</view>
+      <view class="empty-s">做完一张图纸，回来记一笔好不好做</view>
+    </view>
+
+    <view class="item" wx:for="{{rated}}" wx:key="key">
+      <view class="i-body">
+        <view class="i-name">{{item.name}}</view>
+        <view class="stars">
+          <text class="star {{s <= item.stars ? 'on' : ''}}"
+                wx:for="{{[1,2,3,4,5]}}" wx:for-item="s" wx:key="*this">★</text>
+        </view>
+        <view class="i-note" wx:if="{{item.note}}">{{item.note}}</view>
+        <text class="i-at">{{item.at}}</text>
+      </view>
+    </view>
+  </block>
+
+  <view class="reset" bindtap="reset">清空收藏与评价</view>
+
+  <view class="disclaimer">
+    收藏和评价只存在本机 —— 没有后端，换设备或清缓存就没了，别人也看不到。
+  </view>
+
+</view>

@@ -1,0 +1,77 @@
+<!-- 主题色通过 CSS 变量注入根节点，换分类时整个界面一起换 -->
+<view class="page"
+      style="--accent:{{theme.accent}};--lite:{{theme.lite}};--hero-a:{{theme.heroA}};--hero-b:{{theme.heroB}};">
+
+  <!-- 渐变压顶。方格纹理叠在上面，保留图纸的基因 -->
+  <view class="hero" style="padding-top:{{statusBarHeight}}px">
+    <view class="hero-grid"></view>
+    <view class="hero-inner">
+      <view class="hero-row">
+        <view class="brand">图纸库</view>
+        <view class="brand-en">PATTERNS</view>
+      </view>
+      <view class="brand-sub">拼豆 · 刺绣 · 像素画 · 共 {{kindTotal}} 款</view>
+    </view>
+  </view>
+
+  <!-- 用途 -->
+  <view class="kinds">
+    <view class="kind {{kind === item.key ? 'on' : ''}}"
+          wx:for="{{kinds}}" wx:key="key"
+          data-k="{{item.key}}" bindtap="setKind">
+      <text class="kind-n">{{item.name}}</text>
+      <text class="kind-e">{{item.en}}</text>
+    </view>
+  </view>
+
+  <!-- 系列。横向可滚 —— 系列数是不定的，竖着排会吃掉太多首屏 -->
+  <scroll-view class="series" scroll-x="true" show-scrollbar="{{false}}">
+    <view class="chip {{seriesKey === item.key ? 'on' : ''}}"
+          wx:for="{{series}}" wx:key="key"
+          data-k="{{item.key}}" bindtap="setSeries">{{item.name}}</view>
+  </scroll-view>
+
+  <!-- 排序。原来的三个榜单降级成了这里的排序控件 -->
+  <view class="modes">
+    <view class="mode {{mode === item.key ? 'on' : ''}}"
+          wx:for="{{modes}}" wx:key="key"
+          data-k="{{item.key}}" bindtap="setMode">
+      <text class="mode-n">{{item.name}}</text>
+    </view>
+  </view>
+  <view class="mode-note">{{modeNote}}</view>
+
+  <!-- 目录网格。缩略图是主角 -->
+  <view class="grid" wx:if="{{cards.length}}">
+    <view class="card" wx:for="{{cards}}" wx:key="id"
+          data-id="{{item.id}}" bindtap="toDetail">
+
+      <view class="c-stage">
+        <canvas type="2d" class="g-cv" data-id="{{item.id}}"
+                style="width:{{cellPx}}px;height:{{cellPx}}px"></canvas>
+      </view>
+
+      <view class="c-name">
+        <text class="c-n">{{item.name}}</text>
+        <text class="c-e">{{item.en}}</text>
+      </view>
+      <view class="c-spec">{{item.w}}×{{item.h}} · {{item.colorCount}}色 · {{item.difficultyName}}</view>
+
+      <view class="c-meta">
+        <text class="cm-like">♥ {{item.likes}}</text>
+        <text class="cm-rate">★ {{item.rating}}</text>
+      </view>
+      <!-- 数据条：按当前列表的最大点赞数归一 -->
+      <view class="c-track"><view class="c-fill" style="width:{{item.likePct}}%"></view></view>
+    </view>
+  </view>
+
+  <view class="empty" wx:else>这个系列还没有图纸</view>
+
+  <view class="note">
+    图案分两类：一类由公式生成的通用几何图形，一类由 AI 生成的插画量化而来
+    （已去掉水印与背景）。两类都不含任何受版权保护的角色或商标。
+    点赞与评分是演示数据，难度是真实计算的。
+  </view>
+
+</view>

@@ -1,0 +1,13 @@
+project.private.config.json
+.env
+.env.*
+!.env.example
+node_modules/
+tools/work/
+__pycache__/
+*.py[cod]
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

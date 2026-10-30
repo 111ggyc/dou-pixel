@@ -1,0 +1,125 @@
+<view class="page">
+
+  <view class="nav" style="padding-top:{{statusBarHeight}}px">
+    <view class="nav-row">
+      <view class="brand">图纸</view>
+      <view class="brand-en">PATTERN</view>
+    </view>
+    <view class="brand-sub">照片 → 手作图纸</view>
+    <view class="rule"></view>
+  </view>
+
+  <view class="stage">
+    <view class="board" wx:if="{{src}}">
+      <canvas type="2d" id="cv" class="cv"
+              style="width:{{cvW}}px;height:{{cvH}}px"></canvas>
+      <view class="board-tag">{{chartCols}} × {{chartRows}} 格<text wx:if="{{sizeText}}"> · {{sizeText}}</text></view>
+    </view>
+
+    <view class="empty" wx:else bindtap="pick">
+      <view class="eg">
+        <view class="eg-cell" wx:for="{{emptyGrid}}" wx:key="i"></view>
+      </view>
+      <view class="empty-t">放一张照片进来</view>
+      <view class="empty-s">转成十字绣 / 拼豆 / 像素画图纸</view>
+      <view class="empty-link" catchtap="toGallery">或者，逛现成的图纸库 ›</view>
+    </view>
+  </view>
+
+  <block wx:if="{{src}}">
+    <view class="kinds">
+      <view class="kind {{kind === item.key ? 'on' : ''}}"
+            wx:for="{{kinds}}" wx:key="key"
+            data-k="{{item.key}}" bindtap="setKind">
+        <text class="kind-n">{{item.name}}</text>
+        <text class="kind-e">{{item.en}}</text>
+      </view>
+    </view>
+
+    <!-- 图片信息：这张图多大、什么比例、格数该拉到多少。
+         同样的 80 格，3:4 竖图是 8560 格、16:9 横图是 3600 格 ——
+         工作量差两倍多，不给推荐的话用户只能瞎拉 -->
+    <view class="info" wx:if="{{suggest}}">
+      <view class="info-row">
+        <text class="info-k">原图</text>
+        <text class="info-v">{{origW}} × {{origH}} px</text>
+        <text class="info-tag">{{ratioText}} {{orientText}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-k">推荐</text>
+        <text class="info-v">{{suggest.cols}} 格</text>
+        <text class="info-tag">{{suggest.note}}</text>
+      </view>
+      <view class="info-hint">{{suggest.text}}</view>
+      <view class="info-act" bindtap="applyRecommend">用推荐格数</view>
+    </view>
+
+    <!-- 比例太极端才出现。只给建议，不自动改图 -->
+    <view class="warn" wx:if="{{cropTip}}">
+      <view class="warn-t">⚠ {{cropTip.reason}}</view>
+      <view class="warn-s">裁成 {{cropTip.label}} 是 {{cols}} × {{cropTip.rowsAfter}} 格，不裁是 {{cols}} × {{cropTip.rowsNow}} 格</view>
+      <view class="warn-act" bindtap="applyCrop">居中裁成 {{cropTip.label}}</view>
+    </view>
+
+    <view class="cropped" wx:if="{{cropLabel}}">
+      <text>已居中裁成 {{cropLabel}}</text>
+      <text class="cropped-undo" bindtap="clearCrop">还原</text>
+    </view>
+
+    <view class="ctrl">
+      <view class="ctrl-head">
+        <text class="ctrl-n">格数</text>
+        <text class="ctrl-e">COLUMNS</text>
+        <text class="ctrl-v">{{cols}}</text>
+      </view>
+      <slider min="20" max="120" value="{{cols}}"
+              activeColor="#b8472f" backgroundColor="#dedad0"
+              block-size="18" block-color="#b8472f"
+              bindchanging="onCols" bindchange="onCols" />
+    </view>
+
+    <view class="ctrl">
+      <view class="ctrl-head">
+        <text class="ctrl-n">色数</text>
+        <text class="ctrl-e">COLORS</text>
+        <text class="ctrl-v">{{colors}}</text>
+      </view>
+      <slider min="4" max="32" value="{{colors}}"
+              activeColor="#b8472f" backgroundColor="#dedad0"
+              block-size="18" block-color="#b8472f"
+              bindchanging="onColors" bindchange="onColors" />
+    </view>
+
+    <view class="ctrl">
+      <view class="ctrl-head">
+        <text class="ctrl-n">抖动</text>
+        <text class="ctrl-e">DITHER</text>
+        <text class="ctrl-v">{{dither ? '开' : '关'}}</text>
+      </view>
+      <view class="tog-row" bindtap="toggleDither">
+        <view class="tog {{dither ? 'on' : ''}}">
+          <view class="tog-knob"></view>
+        </view>
+        <text class="tog-hint">打散渐变色带。会产生零散单格，十字绣慎用</text>
+      </view>
+    </view>
+
+    <!-- 材料方案入口。原来这里放的是「用色表」，
+         现在逐色用量和采购清单都在详情页，挪过去免得两处重复维护 -->
+    <view class="plan-entry" bindtap="toPlan">
+      <view class="pe-l">
+        <view class="pe-t">材料方案与用料清单</view>
+        <view class="pe-s">{{legend.length}} 色 · 共 {{totalCells}} 格 · 按尺寸算要买多少</view>
+      </view>
+      <text class="pe-arrow">›</text>
+    </view>
+
+    <view class="bar" style="padding-bottom:{{safeBottom}}px">
+      <view class="btn ghost" bindtap="pick">换一张</view>
+      <view class="btn main {{busy ? 'busy' : ''}}" bindtap="export">
+        {{busy ? '生成中…' : '导出图纸'}}
+      </view>
+    </view>
+  </block>
+
+</view>

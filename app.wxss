@@ -1,0 +1,15 @@
+/* 图纸 全局 tokens
+   方格纸 / 工程图纸的观感：冷灰米白底 + 近黑字 + 砖红批注色。
+   刻意和另外三个拉开 —— FILMROLL 是暗色、GRIDZ 是纯白、SKETCH 是暖米白。 */
+page {
+  background: #f4f4ef;
+  color: #23282b;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+view,
+text,
+canvas {
+  box-sizing: border-box;
+}

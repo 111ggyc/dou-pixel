@@ -1,0 +1,455 @@
+.page {
+  min-height: 100vh;
+  padding: 0 28rpx 28rpx;
+}
+
+/* 数字和英文一律等宽 —— 图纸的观感靠这个撑起来 */
+.mono,
+.brand-en,
+.ctrl-v,
+.ctrl-e,
+.legend-meta,
+.hex,
+.cnt,
+.pct,
+.sym,
+.board-tag,
+.kind-e,
+.info-v,
+.info-tag,
+.info-hint,
+.warn-s {
+  font-family: Consolas, Menlo, "SF Mono", monospace;
+}
+
+/* ── 导航 ─────────────────────────────── */
+.nav {
+  padding-bottom: 20rpx;
+}
+.nav-row {
+  display: flex;
+  align-items: baseline;
+  padding: 16rpx 0 6rpx;
+}
+.brand {
+  font-size: 52rpx;
+  font-weight: 800;
+  letter-spacing: 8rpx;
+  color: #23282b;
+}
+.brand-en {
+  padding-left: 20rpx;
+  font-size: 22rpx;
+  letter-spacing: 6rpx;
+  color: #b8472f;
+}
+.brand-sub {
+  font-size: 21rpx;
+  letter-spacing: 2rpx;
+  color: #8b8b82;
+  padding-bottom: 18rpx;
+}
+/* 一根实线，和 GRIDZ 一样是排版骨架 */
+.rule {
+  height: 3rpx;
+  background: #23282b;
+}
+
+/* ── 图纸板 ───────────────────────────── */
+.stage {
+  display: flex;
+  justify-content: center;
+  padding: 36rpx 0 36rpx;
+}
+
+.board {
+  position: relative;
+  padding: 10rpx;
+  background: #ffffff;
+  border: 2rpx solid #d8d4c8;
+  box-shadow: 0 12rpx 30rpx rgba(60, 55, 40, 0.10);
+}
+.cv {
+  display: block;
+  background: #ffffff;
+}
+.board-tag {
+  position: absolute;
+  right: -2rpx;
+  bottom: -34rpx;
+  font-size: 19rpx;
+  letter-spacing: 2rpx;
+  color: #9a9689;
+}
+
+/* ── 空状态：一小片方格纸 ─────────────── */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 0;
+}
+.eg {
+  display: flex;
+  flex-wrap: wrap;
+  width: 336rpx;
+  height: 336rpx;
+  background: #ffffff;
+  border: 2rpx solid #d8d4c8;
+  box-shadow: 0 12rpx 30rpx rgba(60, 55, 40, 0.10);
+}
+.eg-cell {
+  width: 56rpx;
+  height: 56rpx;
+  border-right: 1rpx solid #e6e2d6;
+  border-bottom: 1rpx solid #e6e2d6;
+}
+.empty-t {
+  margin-top: 46rpx;
+  font-size: 30rpx;
+  letter-spacing: 4rpx;
+  color: #23282b;
+}
+.empty-s {
+  margin-top: 14rpx;
+  font-size: 21rpx;
+  letter-spacing: 2rpx;
+  color: #8b8b82;
+}
+.empty-link {
+  margin-top: 34rpx;
+  padding: 18rpx 40rpx;
+  border: 2rpx solid #b8472f;
+  border-radius: 8rpx;
+  font-size: 25rpx;
+  letter-spacing: 2rpx;
+  color: #b8472f;
+  background: #ffffff;
+}
+
+/* ── 图纸类型 ─────────────────────────── */
+.kinds {
+  display: flex;
+  border-top: 2rpx solid #dedad0;
+}
+.kind {
+  flex: 1;
+  padding: 20rpx 0 18rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 2rpx solid #dedad0;
+}
+.kind:last-child {
+  border-right: none;
+}
+.kind-n {
+  font-size: 27rpx;
+  letter-spacing: 3rpx;
+  color: #8b8b82;
+}
+.kind-e {
+  margin-top: 6rpx;
+  font-size: 17rpx;
+  letter-spacing: 2rpx;
+  color: #b3b0a6;
+}
+.kind.on {
+  background: #ffffff;
+}
+.kind.on .kind-n {
+  color: #b8472f;
+  font-weight: 600;
+}
+.kind.on .kind-e {
+  color: #b8472f;
+  opacity: 0.65;
+}
+
+/* ── 控制 ─────────────────────────────── */
+.ctrl {
+  padding: 24rpx 0 6rpx;
+}
+.ctrl-head {
+  display: flex;
+  align-items: baseline;
+  padding-bottom: 8rpx;
+}
+.ctrl-n {
+  font-size: 26rpx;
+  letter-spacing: 4rpx;
+  color: #23282b;
+  flex: 1;
+}
+.ctrl-e {
+  font-size: 17rpx;
+  letter-spacing: 3rpx;
+  color: #b3b0a6;
+  flex: 1;
+}
+.ctrl-v {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #b8472f;
+}
+
+/* ── 抖动开关 ─────────────────────────── */
+.tog-row {
+  display: flex;
+  align-items: center;
+  padding: 4rpx 4rpx 0;
+}
+.tog {
+  width: 84rpx;
+  height: 46rpx;
+  border-radius: 23rpx;
+  background: #d8d4c8;
+  border: 2rpx solid #c8c3b6;
+  flex: 0 0 auto;
+  padding: 3rpx;
+}
+.tog.on {
+  background: #b8472f;
+  border-color: #b8472f;
+}
+.tog-knob {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.22);
+  transition: transform 0.16s ease;
+}
+.tog.on .tog-knob {
+  transform: translateX(38rpx);
+}
+.tog-hint {
+  padding-left: 20rpx;
+  font-size: 19rpx;
+  line-height: 1.5;
+  color: #9a9689;
+  flex: 1;
+}
+
+/* ── 图片信息 / 推荐格数 ───────────────── */
+.info {
+  margin-top: 30rpx;
+  padding: 22rpx 26rpx 20rpx;
+  background: #ffffff;
+  border: 2rpx solid #e6e2d6;
+  border-radius: 12rpx;
+}
+.info-row {
+  display: flex;
+  align-items: baseline;
+  padding: 8rpx 0;
+}
+.info-k {
+  width: 68rpx;
+  font-size: 22rpx;
+  letter-spacing: 3rpx;
+  color: #9a9689;
+  flex: 0 0 auto;
+}
+.info-v {
+  font-size: 26rpx;
+  color: #23282b;
+  flex: 1;
+}
+.info-tag {
+  font-size: 20rpx;
+  color: #9a9689;
+  text-align: right;
+  flex: 0 0 auto;
+  padding-left: 16rpx;
+}
+.info-hint {
+  margin-top: 6rpx;
+  padding-left: 68rpx;
+  font-size: 20rpx;
+  line-height: 1.6;
+  color: #9a9689;
+  font-family: Consolas, Menlo, monospace;
+}
+/* 采用推荐是个**次要**动作（用户也可能就想用自己拉的格数），
+   所以做成描边按钮，不跟底部的「导出图纸」抢主按钮的位置 */
+.info-act {
+  margin-top: 16rpx;
+  padding: 14rpx 0;
+  text-align: center;
+  font-size: 24rpx;
+  letter-spacing: 3rpx;
+  color: #b8472f;
+  border: 2rpx solid #b8472f;
+  border-radius: 8rpx;
+}
+
+/* ── 比例太极端时的裁剪提示 ───────────── */
+.warn {
+  margin-top: 20rpx;
+  padding: 22rpx 26rpx 20rpx;
+  background: #fdf6ec;
+  border: 2rpx solid #e0c9a0;
+  border-radius: 12rpx;
+}
+.warn-t {
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #9a6b1f;
+}
+.warn-s {
+  margin-top: 10rpx;
+  font-size: 20rpx;
+  line-height: 1.7;
+  color: #a89070;
+  font-family: Consolas, Menlo, monospace;
+}
+.warn-act {
+  margin-top: 16rpx;
+  padding: 14rpx 0;
+  text-align: center;
+  font-size: 24rpx;
+  letter-spacing: 3rpx;
+  color: #9a6b1f;
+  border: 2rpx solid #d8b878;
+  border-radius: 8rpx;
+}
+
+.cropped {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18rpx;
+  padding: 16rpx 26rpx;
+  font-size: 21rpx;
+  color: #6b6b63;
+  background: #f2f0e8;
+  border-radius: 10rpx;
+}
+.cropped-undo {
+  padding: 4rpx 18rpx;
+  color: #b8472f;
+  border: 2rpx solid #e0c9bc;
+  border-radius: 6rpx;
+}
+
+/* ── 用色表 ───────────────────────────── */
+/* 材料方案入口。原来这里是「用色表」，挪到详情页了 ——
+   两处都放逐色用量的话，改一处忘一处就会不一致 */
+.plan-entry {
+  display: flex;
+  align-items: center;
+  margin-top: 34rpx;
+  padding: 30rpx 28rpx;
+  background: #ffffff;
+  border: 2rpx solid #b8472f;
+  border-radius: 10rpx;
+}
+.pe-l {
+  flex: 1;
+}
+.pe-t {
+  font-size: 29rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: #b8472f;
+}
+.pe-s {
+  margin-top: 10rpx;
+  font-size: 21rpx;
+  color: #9a9689;
+  font-family: Consolas, Menlo, monospace;
+}
+.pe-arrow {
+  font-size: 40rpx;
+  color: #b8472f;
+  padding-left: 20rpx;
+}
+
+.legend {
+  margin-top: 30rpx;
+  border-top: 2rpx solid #dedad0;
+}
+.legend-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 20rpx 4rpx 14rpx;
+}
+.legend-t {
+  font-size: 26rpx;
+  letter-spacing: 4rpx;
+  color: #23282b;
+}
+.legend-meta {
+  font-size: 19rpx;
+  letter-spacing: 1rpx;
+  color: #9a9689;
+}
+.legend-row {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 4rpx;
+  border-bottom: 1rpx solid #ebe7dd;
+}
+.sw {
+  width: 44rpx;
+  height: 44rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.16);
+  flex: 0 0 auto;
+}
+.sym {
+  width: 60rpx;
+  text-align: center;
+  font-size: 30rpx;
+  color: #23282b;
+  flex: 0 0 auto;
+}
+.hex {
+  flex: 1;
+  font-size: 22rpx;
+  letter-spacing: 1rpx;
+  color: #6b6b63;
+}
+.cnt {
+  width: 130rpx;
+  text-align: right;
+  font-size: 22rpx;
+  color: #23282b;
+}
+.pct {
+  width: 96rpx;
+  text-align: right;
+  font-size: 20rpx;
+  color: #9a9689;
+}
+
+/* ── 底部 ─────────────────────────────── */
+.bar {
+  display: flex;
+  margin-top: 40rpx;
+}
+.btn {
+  height: 98rpx;
+  border-radius: 6rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  letter-spacing: 5rpx;
+}
+.btn.ghost {
+  flex: 0 0 190rpx;
+  margin-right: 20rpx;
+  border: 2rpx solid #b8472f;
+  color: #b8472f;
+}
+.btn.main {
+  flex: 1;
+  background: #b8472f;
+  color: #ffffff;
+  font-weight: 600;
+}
+.btn.main.busy {
+  opacity: 0.5;
+}

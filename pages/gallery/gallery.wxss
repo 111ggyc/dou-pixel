@@ -1,0 +1,238 @@
+/* 目录形态的图纸库：渐变压顶 + 系列分类 + 缩略图网格。
+   方格纸、等宽数字、砖红批注色这些图纸基因保留 ——
+   不然就变成随处可见的那种参赛 UI 了。
+
+   ⚠️ .card 的 width 和 padding 被 gallery.js 用来算画布边长，
+   改这里必须同步改那边的 0.488 / 20。 */
+
+.page {
+  min-height: 100vh;
+  padding: 0 28rpx 40rpx;
+  background: #f4f4ef;
+}
+
+/* ── 渐变压顶 ─────────────────────────── */
+.hero {
+  position: relative;
+  margin: 0 -28rpx 0;
+  padding: 0 40rpx 32rpx;
+  overflow: hidden;
+  /* 渐变的两个端点跟主题走 */
+  background: linear-gradient(158deg, var(--hero-a) 0%, var(--hero-b) 100%);
+}
+/* 方格纹理叠在渐变上，透明度压得很低 —— 只是质感，不能抢戏 */
+.hero-grid {
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.055) 0, rgba(255,255,255,0.055) 1rpx, transparent 1rpx, transparent 40rpx),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.055) 0, rgba(255,255,255,0.055) 1rpx, transparent 1rpx, transparent 40rpx);
+}
+.hero-inner {
+  position: relative;
+}
+.hero-row {
+  display: flex;
+  align-items: baseline;
+  padding-top: 28rpx;
+}
+.brand {
+  font-size: 60rpx;
+  font-weight: 800;
+  letter-spacing: 12rpx;
+  color: #ffffff;
+}
+/* 压顶上的辅助文字用中性半透白，不跟主题色 —— 主题色本身就是渐变的一部分，
+   再用主题色写字会糊在底色里 */
+.brand-en {
+  padding-left: 22rpx;
+  font-size: 20rpx;
+  letter-spacing: 8rpx;
+  color: rgba(255, 255, 255, 0.62);
+  font-family: Consolas, Menlo, monospace;
+}
+.brand-sub {
+  margin-top: 16rpx;
+  font-size: 22rpx;
+  letter-spacing: 4rpx;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ── 用途 ─────────────────────────────── */
+.kinds {
+  display: flex;
+  margin: 30rpx 0 0;
+  background: #ffffff;
+  border: 2rpx solid #e6e2d6;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+.kind {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 0 18rpx;
+  border-right: 2rpx solid #f0ece2;
+}
+.kind:last-child { border-right: none; }
+.kind.on { background: var(--accent); }
+.kind-n {
+  font-size: 27rpx;
+  letter-spacing: 3rpx;
+  color: #7a7a72;
+}
+.kind.on .kind-n { color: #ffffff; font-weight: 700; }
+.kind-e {
+  margin-top: 5rpx;
+  font-size: 17rpx;
+  letter-spacing: 2rpx;
+  color: #b0aca2;
+}
+.kind.on .kind-e { color: rgba(255, 255, 255, 0.72); }
+
+/* ── 系列 ─────────────────────────────── */
+/* 横向滚动走最老实的写法：scroll-view 上 nowrap + 子元素 inline-block。
+   不用 enable-flex —— 那个和 display:flex 混用在不同基础库版本上表现不一致 */
+.series {
+  margin: 24rpx 0 0;
+  white-space: nowrap;
+}
+.chip {
+  display: inline-block;
+  flex: 0 0 auto;
+  margin-right: 14rpx;
+  padding: 10rpx 26rpx;
+  font-size: 24rpx;
+  letter-spacing: 2rpx;
+  color: #7a7a72;
+  background: #ffffff;
+  border: 2rpx solid #e6e2d6;
+  border-radius: 999rpx;
+}
+/* 选中的系列用**实体主题色**，和用途栏的选中态呼应 ——
+   两处都用同一套「选中 = 主题色实底」的语言，不用再解释 */
+.chip.on {
+  color: #ffffff;
+  font-weight: 700;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ── 排序 ─────────────────────────────── */
+.modes {
+  display: flex;
+  margin: 26rpx 0 0;
+}
+.mode {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0 14rpx;
+  font-size: 25rpx;
+  letter-spacing: 3rpx;
+  color: #9a9689;
+  border-bottom: 4rpx solid #e6e2d6;
+}
+.mode.on {
+  color: var(--accent);
+  font-weight: 700;
+  border-bottom-color: var(--accent);
+}
+.mode-note {
+  font-size: 19rpx;
+  line-height: 1.7;
+  color: #a8a29a;
+  padding: 14rpx 0 20rpx;
+}
+
+/* ── 目录网格 ─────────────────────────── */
+/* 两列。width 和 .card 的 padding 参与画布边长计算，见文件头 */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.card {
+  width: 48.8%;
+  box-sizing: border-box;
+  margin-bottom: 20rpx;
+  padding: 20rpx 20rpx 18rpx;
+  background: #ffffff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(60, 45, 35, 0.07);
+}
+/* 缩略图的底：浅方格底纹，衬出图纸的纸质感 */
+.c-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background:
+    repeating-linear-gradient(0deg, #f6f4ee 0, #f6f4ee 1rpx, transparent 1rpx, transparent 12rpx),
+    repeating-linear-gradient(90deg, #f6f4ee 0, #f6f4ee 1rpx, transparent 1rpx, transparent 12rpx);
+  border-radius: 10rpx;
+}
+.g-cv {
+  display: block;
+}
+
+.c-name {
+  display: flex;
+  align-items: baseline;
+  margin-top: 14rpx;
+}
+.c-n {
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: #23282b;
+}
+.c-e {
+  padding-left: 10rpx;
+  font-size: 16rpx;
+  letter-spacing: 1rpx;
+  color: #b0aca2;
+  font-family: Consolas, Menlo, monospace;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.c-spec {
+  margin-top: 6rpx;
+  font-size: 19rpx;
+  color: #9a9689;
+  font-family: Consolas, Menlo, monospace;
+}
+.c-meta {
+  margin-top: 10rpx;
+  font-size: 21rpx;
+  font-family: Consolas, Menlo, monospace;
+}
+.cm-like { color: var(--accent); }
+.cm-rate { color: #c98a2a; padding-left: 16rpx; }
+
+.c-track {
+  margin-top: 10rpx;
+  height: 10rpx;
+  border-radius: 5rpx;
+  background: #f0ece2;
+  overflow: hidden;
+}
+.c-fill {
+  height: 100%;
+  border-radius: 5rpx;
+  background: linear-gradient(90deg, var(--lite), var(--accent));
+}
+
+.empty {
+  padding: 90rpx 0;
+  text-align: center;
+  font-size: 24rpx;
+  color: #a8a29a;
+}
+
+.note {
+  margin-top: 30rpx;
+  font-size: 19rpx;
+  line-height: 1.8;
+  color: #a8a29a;
+}
